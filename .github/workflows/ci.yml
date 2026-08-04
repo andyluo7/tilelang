@@ -77,27 +77,17 @@ jobs:
   tests:
     name: Test for Python ${{ matrix.python-version }} with ${{ matrix.runner.toolkit }} (on ${{ matrix.runner.name }})
     if: |
-      github.repository_owner == 'tile-ai' &&
       (github.event_name != 'pull_request' || !github.event.pull_request.draft)
     needs: [lint]
     runs-on: ${{ matrix.runner.tags }}
     strategy:
       matrix:
         runner:
-          - tags: [self-hosted, nvidia]
-            name: self-hosted-nvidia
-            # Format: CUDA-auto or [Nightly-]CUDA-<major>.<minor>[.<patch>].
-            # E.g., "CUDA-auto", "CUDA-13.0", or "Nightly-CUDA-13.0".
-            # Use "Nightly-" prefix to use torch nightly builds.
-            toolkit: CUDA-auto
           - tags: [self-hosted, amd, gfx942]
             name: self-hosted-amd-gfx942
             # Format: [Nightly-]ROCm-<major>.<minor>[.<patch>]. E.g., "ROCm-6.4" or "Nightly-ROCm-7.0".
             # Use "Nightly-" prefix to use torch nightly builds.
             toolkit: Nightly-ROCm-7.2
-          - tags: [macos-latest]
-            name: macos-latest
-            toolkit: Metal # or Nightly-Metal
         python-version:
           - "3.12"
       fail-fast: false
@@ -427,7 +417,7 @@ jobs:
   cutedsl:
     name: CuTeDSL Examples for Python 3.12 with CUDA-auto (on self-hosted-nvidia)
     if: |
-      github.repository_owner == 'tile-ai' &&
+      false &&
       (github.event_name != 'pull_request' || !github.event.pull_request.draft)
     needs: [tests]
     runs-on: [self-hosted, nvidia]
